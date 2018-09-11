@@ -9,9 +9,10 @@ for i=1:5
 Oper{i}=my_reshape(tables{i});
 n(i)=size(tables{i},1);
 end
-
-%parameters
 BKS=[55,930,666,655,935];
+
+
+%parameters of PSO
 c1=1.5;
 c2=2; % PSO parameters
 omega=1;
@@ -22,12 +23,21 @@ P_enh=0.01; % probability of executing SA enhancement
 T_f=0.1; %final annealing temperature
 maxeval=300000;
 
-enhancement=1;
-j=1;
+if 0
+    enhancement=1;
+    j=1;
+    
+    [Makespan,Neval]=PSO(enhancement,Oper{j},omega,damp,c1,c2,N,...
+        maxeval,n(j),P_enh,beta,T_f,BKS(j));
+    
+end
 
-[Makespan,Neval]=PSO(enhancement,Oper{j},omega,damp,c1,c2,N,...
-    maxeval,n(j),P_enh,beta,T_f,BKS(j));
-
+if 0
+    j=1;
+    max_repeat=0;
+    
+    [Makespan,Neval]=ShootGo(Oper{j},maxeval,max_repeat,BKS(j),n(j));
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%% experiment. 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if 0
@@ -93,5 +103,27 @@ end
 avg=mean(Timespan,3);
 avg_N=mean(avg,2);
 avg_beta=mean(avg);
+
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Shoot&Go %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if 0
+%parameters of ShootGo
+max_repeat=5;
+
+Timespan=zeros(5,5);
+Neval=Timespan;
+for j=1:5
+    j
+for i=1:5
+[Timespan(i,j),Neval(i,j)]=ShootGo(Oper{j},maxeval,max_repeat,BKS(j),n(j));
+end
+end
+ShoGo.avg=mean(Timespan);
+ShoGo.best=min(Timespan);
+ShoGo.worst=max(Timespan);
+ShoGo.MNE=sum(Neval(Neval<maxeval))./sum(Neval<maxeval);
+ShoGo.Rel=sum(Neval<maxeval)/5;
 
 end
