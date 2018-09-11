@@ -6,14 +6,12 @@ p3=0.1;
 Neval=0; %number of evaluations
 
 %initialization
-p_min=-10;
-p_max=10;
-p=(p_max-p_min)*rand(1,D)+p_min;
+p=randperm(D);
 seq=encode(p,n);
 makespan_best=eval_makespan(seq,Oper,n);
 
 while Neval<maxeval
-    p=(p_max-p_min)*rand(1,D)+p_min;
+    p=randperm(D);
     seq=encode(p,n);
     makespan=eval_makespan(seq,Oper,n);
     Neval=Neval+1;
